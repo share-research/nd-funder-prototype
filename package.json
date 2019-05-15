@@ -1,0 +1,11 @@
+{
+  "name": "share-pmc",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "lodash": "^4.17.11",
+    "xml-js": "^1.6.11"
+  }
+}
