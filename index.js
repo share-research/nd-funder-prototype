@@ -1,11 +1,30 @@
 const axios = require('axios');
 const _ = require('lodash');
 const xmlToJson = require('xml-js');
+const pMap = require('p-map');
 
+const dataFolderPath = "data";
 const urlGetUids = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi';
 const urlGetRecords = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi';
 
+async function wait(ms){
+  return new Promise((resolve, reject)=> {
+    setTimeout(() => {
+      resolve(true);
+    },
+    ms 
+    );
+  });
+}
+
+async function getAwardPublications(awardId){
+  const ids = await getESearch(awardId);
+  const records = await getEFetch(ids);
+  return extractMetadata(records);
+}
+
 async function getESearch(term){
+  await wait(334);
   const url = `${urlGetUids}`;
   const response = await axios.get(url, {
     params: {
@@ -19,6 +38,7 @@ async function getESearch(term){
 }
 
 async function getEFetch(ids){
+  await wait(334);
   const url = `${urlGetRecords}`;
   const commaSeparatedIds = _.join(ids, ',');
   const response = await axios.get(url, {
@@ -45,9 +65,19 @@ function extractMetadata(rawJson){
 
 async function go() {
 
-  const ids = await getESearch('GM067079');
-  const records = await getEFetch(ids);
-  console.log(extractMetadata(records));
+  const awardIds = ['GM067079','GM096767', 'CA158066'];
+
+  const mapper = async (awardId) => {
+    const response = await getAwardPublications(awardId);
+    console.log(response);
+  };
+
+  const result = await pMap(awardIds, mapper, {concurrency: 2});
+  
+//  _.forEach(AwardIds, async function(awardId){
+//    console.log(getAwardPublications(awardId));
+//  });
+  //console.log(await getAwardPublications('GM067079'));
 }
 
 go();
