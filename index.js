@@ -18,10 +18,10 @@ const urlGetRecords = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi'
 //});
 
 const creatorSchema = schema({
-  affiliation: String,
-  givenName: String,
-  familyName: String,
-  initials: String,
+  affiliation: {type: String, default: null},
+  givenName: {type: String, default: null},
+  familyName: {type: String, default: null},
+  initials: {type: String, default: null},
 }, translate({
   affiliation: 'AffiliationInfo.Affiliation._text',
   givenName: 'ForeName._text',
@@ -30,17 +30,17 @@ const creatorSchema = schema({
 }));
 
 const resourceIdentifierSchema = schema({
-  resourceIdentifierType: String,
-  resourceIdentifier: String,
+  resourceIdentifierType: {type: String, default: null},
+  resourceIdentifier: {type: String, default: null},
 }, translate({
   resourceIdentifierType: '_attributes.IdType',
   resourceIdentifier: '_text'
 }));
 
 const funderIdentifierSchema = schema({
-  funder: String,
-  country: String,
-  funderIdentifier: String,
+  funder: {type: String, default: null},
+  country: {type: String, default: null},
+  funderIdentifier: {type: String, default: null},
 }, translate ({
   funder: 'Agency._text',
   country: 'Country._text',
@@ -48,8 +48,8 @@ const funderIdentifierSchema = schema({
 }));
 
 const shareWorkSchema = schema({
-  title: String,
-  description: String,
+  title: {type: String, default: null},
+  description: {type: String, default: null},
   creators: [creatorSchema],
   resourceIdentifiers: [resourceIdentifierSchema],
   funderIdentifiers: [funderIdentifierSchema],
