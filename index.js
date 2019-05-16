@@ -2,11 +2,65 @@ const axios = require('axios');
 const _ = require('lodash');
 const xmlToJson = require('xml-js');
 const pMap = require('p-map');
+const schema = require('schm');
+const translate = require('schm-translate');
 
 const dataFolderPath = "data";
 const urlGetUids = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi';
 const urlGetRecords = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi';
 
+
+//const getText = constraints => prevSchema => prevSchema.merge({
+//  validate(values) {
+//    const parsed = prevSchema.parse(values);
+//    return parsed._text;
+//  }
+//});
+
+const creatorSchema = schema({
+  affiliation: String,
+  givenName: String,
+  familyName: String,
+  initials: String,
+}, translate({
+  affiliation: 'AffiliationInfo.Affiliation._text',
+  givenName: 'ForeName._text',
+  familyName: 'LastName._text',
+  initials: 'Initials._text'
+}));
+
+const resourceIdentifierSchema = schema({
+  resourceIdentifierType: String,
+  resourceIdentifier: String,
+}, translate({
+  resourceIdentifierType: '_attributes.IdType',
+  resourceIdentifier: '_text'
+}));
+
+const funderIdentifierSchema = schema({
+  funder: String,
+  country: String,
+  funderIdentifier: String,
+}, translate ({
+  funder: 'Agency._text',
+  country: 'Country._text',
+  funderIdentifier: 'GrantID._text',
+}));
+
+const shareWorkSchema = schema({
+  title: String,
+  description: String,
+  creators: [creatorSchema],
+  resourceIdentifiers: [resourceIdentifierSchema],
+  funderIdentifiers: [funderIdentifierSchema],
+}, translate({
+  title: 'MedlineCitation.Article.ArticleTitle._text',
+  description: 'MedlineCitation.Article.Abstract.AbstractText._text',
+  creators: 'MedlineCitation.Article.AuthorList.Author',
+  resourceIdentifiers: 'PubmedData.ArticleIdList.ArticleId',
+  funderIdentifiers: 'MedlineCitation.Article.GrantList.Grant'
+}));
+ 
 async function wait(ms){
   return new Promise((resolve, reject)=> {
     setTimeout(() => {
@@ -24,7 +78,7 @@ async function getAwardPublications(awardId){
 }
 
 async function getESearch(term){
-  await wait(334);
+  await wait(1000);
   const url = `${urlGetUids}`;
   const response = await axios.get(url, {
     params: {
@@ -38,7 +92,7 @@ async function getESearch(term){
 }
 
 async function getEFetch(ids){
-  await wait(334);
+  await wait(1000);
   const url = `${urlGetRecords}`;
   const commaSeparatedIds = _.join(ids, ',');
   const response = await axios.get(url, {
@@ -51,13 +105,18 @@ async function getEFetch(ids){
     }
   });
 
+  //console.log(response.data);
   return xmlToJson.xml2js(response.data, {compact:true});
 }
 
 function extractMetadata(rawJson){
 
+  //return rawJson;
+  console.log(rawJson);
   return _.map(rawJson.PubmedArticleSet.PubmedArticle, (value,key)=> {
-    return _.get(value.MedlineCitation.Article,'GrantList.Grant.GrantID', null);
+    return shareWorkSchema.parse(value);
+    //return _.get(value.MedlineCitation.Article,'GrantList.Grant.GrantID', null);
+
   });
   
 
@@ -72,12 +131,8 @@ async function go() {
     console.log(response);
   };
 
-  const result = await pMap(awardIds, mapper, {concurrency: 2});
-  
-//  _.forEach(AwardIds, async function(awardId){
-//    console.log(getAwardPublications(awardId));
-//  });
-  //console.log(await getAwardPublications('GM067079'));
+  //actually run the method above to getAwardPublications against each awardId in the awardsIds array, timeout enabled to avoid exceeded request limit to PMC
+  const result = await pMap(awardIds, mapper, {concurrency: 2});  
 }
 
 go();
