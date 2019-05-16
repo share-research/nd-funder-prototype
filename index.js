@@ -4,6 +4,7 @@ const xmlToJson = require('xml-js');
 const pMap = require('p-map');
 const schema = require('schm');
 const translate = require('schm-translate');
+const fs = require('fs');
 
 const dataFolderPath = "data";
 const urlGetUids = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi';
@@ -34,7 +35,7 @@ const resourceIdentifierSchema = schema({
   resourceIdentifier: {type: String, default: null},
 }, translate({
   resourceIdentifierType: '_attributes.IdType',
-  resourceIdentifier: '_text'
+  resourceIdentifier: '_text',
 }));
 
 const funderIdentifierSchema = schema({
@@ -115,8 +116,6 @@ function extractMetadata(rawJson){
   console.log(rawJson);
   return _.map(rawJson.PubmedArticleSet.PubmedArticle, (value,key)=> {
     return shareWorkSchema.parse(value);
-    //return _.get(value.MedlineCitation.Article,'GrantList.Grant.GrantID', null);
-
   });
   
 
@@ -128,6 +127,10 @@ async function go() {
 
   const mapper = async (awardId) => {
     const response = await getAwardPublications(awardId);
+    fs.writeFile(`${process.cwd()}/${dataFolderPath}/awards/${awardId}.json`, JSON.stringify(response), (err) => {
+      if (err) throw err;
+      console.log('The file has been saved!');
+    });
     console.log(response);
   };
 
