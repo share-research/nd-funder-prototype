@@ -109,9 +109,13 @@ async function getEFetch(ids){
 }
 
 function extractMetadata(rawJson){
-  return _.map(rawJson.PubmedArticleSet.PubmedArticle, (value,key)=> {
-    return shareWorkSchema.parse(value);
-  });
+  if (_.isArray(rawJson.PubmedArticleSet.PubmedArticle)) {
+    return _.map(rawJson.PubmedArticleSet.PubmedArticle, (value,key)=> {
+      return shareWorkSchema.parse(value);
+    });
+  } else {
+      return shareWorkSchema.parse(rawJson.PubmedArticleSet.PubmedArticle);
+  }
 }
 
 async function getFileData(filePath){
@@ -126,40 +130,40 @@ async function createAwardPubJSON(awardId, data){
 
 }
 
-async function loadAwardIdPublications(awardDataDir){
-
-  if (awardDataDir){
-    console.log(`Reading files from directory: ${awardDataDir}`);
-    fs.readdir(awardDataDir, (err, files) => {
-      if (err) throw err;
-      const mapper = async (fileName) => {
-        const filePath = path.join(awardDataDir,`${filename}`);
-        console.log(`Reading data from file: ${filePath}`);
-        awardPubs = [];
-        const data = await getFileData(filePath);
-        if (data){
-          if (filename.includes('.')){
-            awardId = filename.split('.').slice(0,-1).join('.');
-          } else {
-            awardId = filename;
-          }
-          console.log(`Creating object for award id: ${awardId}`);
-          awardPub = createJsonObject(awardId, data);
-          awardPubs.push(awardPub);
-        }
-      };
-    }
-  } else {
-    console.log('Reading data from Directory failed: File directory undefined');
-  }
+//async function loadAwardIdPublications(awardDataDir){
+//
+//  if (awardDataDir){
+//    console.log(`Reading files from directory: ${awardDataDir}`);
+//    fs.readdir(awardDataDir, (err, files) => {
+//      if (err) throw err;
+//      const mapper = async (fileName) => {
+//        const filePath = path.join(awardDataDir,`${filename}`);
+//        console.log(`Reading data from file: ${filePath}`);
+//        awardPubs = [];
+ //       const data = await getFileData(filePath);
+ //       if (data){
+ //         if (filename.includes('.')){
+ //           awardId = filename.split('.').slice(0,-1).join('.');
+ //         } else {
+ //           awardId = filename;
+ //         }
+ //         console.log(`Creating object for award id: ${awardId}`);
+ //         awardPub = createJsonObject(awardId, data);
+ //         awardPubs.push(awardPub);
+ //       }
+ //     };
+ //   }
+ // } else {
+ //   console.log('Reading data from Directory failed: File directory undefined');
+ // }
   
   
-}
+//}
 
 async function go() {
   const awardIds = await getIds();
   const uniqueAwardIds = _.uniq(awardIds);
-  //uniqueAwardIds = ['CA21691'];
+  //uniqueAwardIds = ['GM067079','CA212964'];
   console.log(`Found ${awardIds.length} awards; ${uniqueAwardIds.length} unique`);
 
   const mapper = async (awardId) => {
@@ -176,3 +180,4 @@ async function go() {
 }
 
 go();
+
