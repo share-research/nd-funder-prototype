@@ -109,9 +109,13 @@ async function getEFetch(ids){
 }
 
 function extractMetadata(rawJson){
-  return _.map(rawJson.PubmedArticleSet.PubmedArticle, (value,key)=> {
-    return shareWorkSchema.parse(value);
-  });
+  if (_.isArray(rawJson.PubmedArticleSet.PubmedArticle)) {
+    return _.map(rawJson.PubmedArticleSet.PubmedArticle, (value,key)=> {
+      return shareWorkSchema.parse(value);
+    });
+  } else {
+      return shareWorkSchema.parse(rawJson.PubmedArticleSet.PubmedArticle);
+  }
 }
 
 async function getFileData(filePath){
@@ -159,7 +163,7 @@ async function loadAwardIdPublications(awardDataDir){
 async function go() {
   const awardIds = await getIds();
   const uniqueAwardIds = _.uniq(awardIds);
-  //uniqueAwardIds = ['CA21691'];
+  //uniqueAwardIds = ['GM067079','CA212964'];
   console.log(`Found ${awardIds.length} awards; ${uniqueAwardIds.length} unique`);
 
   const mapper = async (awardId) => {
@@ -176,3 +180,4 @@ async function go() {
 }
 
 go();
+
