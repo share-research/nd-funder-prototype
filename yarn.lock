@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+another-name-parser@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/another-name-parser/-/another-name-parser-0.0.7.tgz#9d54e1fa24982182049685b71a8fd0c6c781b4a9"
+  integrity sha512-gSFnBnY9unFTaQsHIChNh8GtOjCt9kihD+TN2GNotupFID1pW8l81PWZrRbQtFxFwN48oc+5mCQFbDRRIv9BcA==
+  dependencies:
+    lodash "^4.17.11"
+
 axios@^0.18.0:
   version "0.18.0"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.18.0.tgz#32d53e4851efdc0a11993b6cd000789d70c05102"
@@ -15,11 +22,26 @@ debug@^3.2.6:
   dependencies:
     ms "^2.1.1"
 
+elasticlunr@^0.9.5:
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/elasticlunr/-/elasticlunr-0.9.5.tgz#65541bb309dddd0cf94f2d1c8861b2be651bb0d5"
+  integrity sha1-ZVQbswnd3Qz5Ty0ciGGyvmUbsNU=
+
 follow-redirects@^1.3.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.7.0.tgz#489ebc198dc0e7f64167bd23b03c4c19b5784c76"
   dependencies:
     debug "^3.2.6"
+
+fuse.js@^3.4.4:
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/fuse.js/-/fuse.js-3.4.4.tgz#f98f55fcb3b595cf6a3e629c5ffaf10982103e95"
+  integrity sha512-pyLQo/1oR5Ywf+a/tY8z4JygnIglmRxVUOiyFAbd11o9keUDpUJSMGRWJngcnkURj30kDHPmhoKY8ChJiz3EpQ==
+
+humanparser@^1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/humanparser/-/humanparser-1.10.0.tgz#270623ee76469efc511a2eb9aa8caea4d438ac2d"
+  integrity sha512-v2QR+EooGSvk0+ODINe8I2JvDtUaCcw1qsH18D1zxyy70Y5osA/caYs7zugYJHDDknBwyv2RVyViF9dNjRXxng==
 
 is-buffer@^1.1.5:
   version "1.1.6"
@@ -32,6 +54,28 @@ lodash@^4.17.11:
 ms@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.1.tgz#30a5864eb3ebb0a66f2ebe6d727af06a09d86e0a"
+
+p-all@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/p-all/-/p-all-2.1.0.tgz#91419be56b7dee8fe4c5db875d55e0da084244a0"
+  integrity sha512-HbZxz5FONzz/z2gJfk6bFca0BCiSRF8jU3yCsWOen/vR6lZjfPOu/e7L3uFzTW1i0H8TlC3vqQstEJPQL4/uLA==
+  dependencies:
+    p-map "^2.0.0"
+
+p-map@^2.0.0, p-map@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/p-map/-/p-map-2.1.0.tgz#310928feef9c9ecc65b68b17693018a665cea175"
+  integrity sha512-y3b8Kpd8OAN444hxfBbFfj1FY/RjtTd8tzYwhUqNYXx0fXx2iX4maP4Qr6qhIKbQXI02wTLAda4fYUbDagTUFw==
+
+papaparse@^4.6.3:
+  version "4.6.3"
+  resolved "https://registry.yarnpkg.com/papaparse/-/papaparse-4.6.3.tgz#742e5eaaa97fa6c7e1358d2934d8f18f44aee781"
+  integrity sha512-LRq7BrHC2kHPBYSD50aKuw/B/dGcg29omyJbKWY3KsYUZU69RKwaBHu13jGmCYBtOc4odsLCrFyk6imfyNubJQ==
+
+parse-full-name@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/parse-full-name/-/parse-full-name-1.2.3.tgz#5a298301b9a90a42eab61182815f3e13a39fabed"
+  integrity sha1-WimDAbmpCkLqthGCgV8+E6Ofq+0=
 
 sax@^1.2.4:
   version "1.2.4"
