@@ -1,0 +1,87 @@
+{
+    "@context": {
+	"foaf" : "http://xmlns.com/foaf/0.1/",
+	"dcterms" : "http://purl.org/dc/terms/",
+	"datacite" : "http://purl.org/spar/datacite/",
+	"pro" : "http://purl.org/spar/pro/",
+	"creatorName" : "foaf:name",
+	"givenName" : "foaf:givenName",
+	"familyName" : "foaf:familyName",
+	"creator":      "dcterms:creator",
+	"description":  "dcterms:description",
+	"descriptionType" : "datacite:descriptionType",
+	"title":        "dcterms:title",
+	"personalIdentfier" : "datacite:PersonalIdentifier",
+	"funderIdentifier" : "datacite:FunderIdentifier",
+	"resourceIdentifier" : "datacite:ResourceIdentifier",
+	"usesIdentifierScheme" : "datacite:IdentifierScheme",  'uses identifier scheme embedded here'
+	"affiliation" : "pro:holdsRoleInTime",
+	"withRole": "pro:withRole",
+	"relatesToOrganization" : "pro:relatesToOrganization",
+	"organization" : "foaf:Organization",
+	"name" : "foaf:name",
+	"isPartOf" : "dcterms:isPartOf",
+	"work": { "$ref": "#/data" }
+    }
+    "data": {
+        "type": "object ",
+        "required": [
+            "@id",
+            "@type"
+        ],
+        "additionalProperties": false,
+        "properties": {
+            "@type": {
+                "type": "string"
+            },
+            "@id": {
+                "type": [
+                    "integer",
+                    "string"
+                ]
+            },
+	    "creators":{
+		"type":"object",
+		"creator":{
+		    "type":"object",
+		    "creatorName",
+		    "givenName",
+		    "familyName",
+		    "personalIdentifier",
+		    "affiliation":{
+			"type":"object",
+			"withRole",
+			"relatesToOrganization" :{
+			    "type" : "organization",
+			    "name"
+			}
+		    }
+		}
+	    },
+	    "titles":{
+		"type":"object",
+		"title"
+	    },
+	    "descriptions":{
+		"type":"object",
+		"description":{
+		    "type":"object",
+		    "-xml:lang":{
+			"type":"string"
+		    },
+		    "descriptionType",
+		    "#text":{
+			"type":"string"
+		    }
+		}
+	    },
+	    "resourceIdentifiers":{
+		"type":"object",
+		"resourceIdentifier"
+	    },
+	    "isPartOf" :{
+	    	"work"
+	    }
+        }
+    }
+}

@@ -47,7 +47,7 @@ is-buffer@^1.1.5:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/is-buffer/-/is-buffer-1.1.6.tgz#efaa2ea9daa0d7ab2ea13a97b2b8ad51fefbe8be"
 
-lodash@^4.17.11:
+lodash@^4.17.10, lodash@^4.17.11:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
 
@@ -80,6 +80,18 @@ parse-full-name@^1.2.3:
 sax@^1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
+
+schm-translate@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/schm-translate/-/schm-translate-0.4.1.tgz#167a6dff2639df0083332adb2cfed4e0c1c7d02e"
+  dependencies:
+    lodash "^4.17.10"
+
+schm@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/schm/-/schm-0.4.1.tgz#8550656119b3b5649549e0d75dd794a8ea90f5dd"
+  dependencies:
+    lodash "^4.17.10"
 
 xml-js@^1.6.11:
   version "1.6.11"
