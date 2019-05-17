@@ -176,7 +176,7 @@ async function go() {
     }
   };
   //actually run the method above to getAwardPublications against each awardId in the awardsIds array, timeout enabled to avoid exceeded request limit to PMC
-  const result = await pMap(uniqueAwardIds, mapper, {concurrency: 2});  
+  const result = await pMap(uniqueAwardIds, mapper, {concurrency: 2});
 }
 
 go();

@@ -4,37 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const pMap = require('p-map');
 
+const writeCsv = require('./writeCsv').command;
 const loadCsv = require('./loadCsv').command;
-
-// async function loadAwardIdPublications(awardDataDir){
-
-//   if (awardDataDir){
-//     console.log(`Reading files from directory: ${awardDataDir}`);
-//     fs.readdir(awardDataDir, (err, files) => {
-//       if (err) throw err;
-//       const mapper = async (fileName) => {
-//         const filePath = path.join(awardDataDir,`${filename}`);
-//         console.log(`Reading data from file: ${filePath}`);
-//         awardPubs = [];
-//         const data = await getFileData(filePath);
-//         if (data){
-//           if (filename.includes('.')){
-//             awardId = filename.split('.').slice(0,-1).join('.');
-//           } else {
-//             awardId = filename;
-//           }
-//           console.log(`Creating object for award id: ${awardId}`);
-//           awardPub = createJsonObject(awardId, data);
-//           awardPubs.push(awardPub);
-//         }
-//       };
-//     }
-//   } else {
-//     console.log('Reading data from Directory failed: File directory undefined');
-//   }
-  
-  
-// }
 
 async function go() {
   const awards = await loadCsv({
@@ -75,10 +46,18 @@ async function go() {
   });
   const authors = _.compact(_.flatten(authorsByGrant));
 
-  const nihKeyed = _.keyBy(nih, 'grandId');
-  console.log(_.map(authors, (author) => {
-    return _.merge(author, nihKeyed[author.grandId])
-  }));
+  function leftOuterJoin(left, leftKey, right, rightKey) {
+    const rightKeyed = _.keyBy(right, rightKey);
+    return _.map(left, (leftObj) => {
+      return _.merge(leftObj, rightKeyed[leftObj[leftKey]])
+    });
+  }
+
+  const data = leftOuterJoin(authors, 'grantId', nih, 'grantId');
+  await writeCsv({
+    path: './data/authorsByAwards.csv',
+    data,
+  });
 }
 
 go();
