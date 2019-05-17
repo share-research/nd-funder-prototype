@@ -1,33 +1,10 @@
-const fs = require('fs');
-const Papa = require('papaparse');
 const _ = require('lodash');
 const pMap = require('p-map');
 const Fuse = require('fuse.js');
-const elasticlunr = require('elasticlunr');
+const elasticlunr = require('elasticlunr'); // We're not using this atm
 
+const loadCsv = require('./loadCsv').command;
 const nameParser = require('./nameParser').command;
-
-function parseCsv(file) {
-  return new Promise((resolve, reject) => {
-    Papa.parse(
-      file,
-      {
-        header: true,
-        complete: (results) => {
-          if (results.error) {
-            reject(results.error);
-          }
-          resolve(results.data);
-        },
-      },
-    );
-  });
-}
-
-async function loadCsv(filePath, db) {
-  const data = await parseCsv(fs.createReadStream(filePath));
-  return data;
-}
 
 function normalizeName(name) {
   return name.toLowerCase().replace(/\W/g, ' ');
@@ -48,6 +25,7 @@ function nameMatchFuzzy(last, first, lastFuzzy) {
 }
 
 function nameMatchElasticLunr(last, first, index) {
+  // Setup outside of this function
   // const index = elasticlunr();
   // index.addField('lastname');
   // index.addField('firstname');
@@ -61,8 +39,13 @@ function nameMatchElasticLunr(last, first, index) {
 }
 
 async function returnNihIds() {
-  const harper = await loadCsv('./data/harper.csv');
+  // Load names from the Harper Institute
+  const harper = await loadCsv({
+    path: './data/harper.csv',
+  });
 
+  // Build the index for lastnames (and we'll pass this in later)
+  // so we only have to do it once
   const fuzzyHarperLast = new Fuse(harper, {
     caseSensitive: false,
     shouldSort: true,
@@ -72,10 +55,17 @@ async function returnNihIds() {
     threshold: 0.001,
   });
 
-  const awards = await loadCsv('./data/awards14-18.csv');
+  // Load award data
+  const awards = await loadCsv({
+    path: './data/awards14-18.csv',
+  });
+
+  // For every award in the award data
   const matchedAwardsRaw = await pMap(awards, async (award, index) => {
     const leadName = award['Award Lead Investigator Name'];
     const awardName = award['Award Investigator Full Name'];
+
+    // Parse both names
     const parsedLeadName = await nameParser({
       name: leadName,
       reduceMethod: 'majority',
@@ -84,12 +74,18 @@ async function returnNihIds() {
       name: awardName,
       reduceMethod: 'majority',
     });
+
+    // Run the fuzzy name match on the first one that matches, if a match, continue
     if(nameMatchFuzzy(parsedLeadName.last, parsedLeadName.first, fuzzyHarperLast)
       || nameMatchFuzzy(parsedLeadName.last, parsedLeadName.first, fuzzyHarperLast)) {
+      
+      // Filter by NIH
       if(_.startsWith(award['Prime Sponsor'], 'National Institutes of Health')) {
         const awardId = award['Sponsor Award Number/ Award ID'];
-        const reResult = /\w{4}([a-z]{2}[0-9]{5})-?.{2,4}.*/i.exec(awardId);
+        // Search for the form we know works in PMC (i.e., XY123456)--note the grouping below (parens)
+        const reResult = /\w{4}([a-z]{2}[0-9]{6})-?.{2,4}.*/i.exec(awardId);
         if(reResult) {
+          // Return the first group from the above regex (i.e., XY123456)
           return reResult[1];
         }
         return null;
@@ -97,6 +93,7 @@ async function returnNihIds() {
     }
     return null;
   });
+  // Remove nulls (i.e., non-matches)
   const matchedAwards = _.compact(matchedAwardsRaw);
   return matchedAwards;
 }
