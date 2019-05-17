@@ -1,15 +1,16 @@
-const axios = require('axios');
 const _ = require('lodash');
-const xmlToJson = require('xml-js');
+const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
+const pify = require('pify');
 const pMap = require('p-map');
 const schema = require('schm');
 const translate = require('schm-translate');
-const fs = require('fs');
+const xmlToJson = require('xml-js');
+
+const getIds = require('./units/joinCsvs').command;
 
 const dataFolderPath = "data";
-const urlGetUids = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi';
-const urlGetRecords = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi';
-
 
 //const getText = constraints => prevSchema => prevSchema.merge({
 //  validate(values) {
@@ -64,23 +65,22 @@ const shareWorkSchema = schema({
  
 async function wait(ms){
   return new Promise((resolve, reject)=> {
-    setTimeout(() => {
-      resolve(true);
-    },
-    ms 
-    );
+    setTimeout(() => resolve(true), ms );
   });
 }
 
 async function getAwardPublications(awardId){
   const ids = await getESearch(awardId);
   const records = await getEFetch(ids);
-  return extractMetadata(records);
+  if(_.get(records, 'PubmedArticleSet.PubmedArticle', null)) {
+    return extractMetadata(records);
+  }
+  return null;
 }
 
 async function getESearch(term){
   await wait(1000);
-  const url = `${urlGetUids}`;
+  const url = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi';
   const response = await axios.get(url, {
     params: {
       db: 'pubmed',
@@ -94,7 +94,7 @@ async function getESearch(term){
 
 async function getEFetch(ids){
   await wait(1000);
-  const url = `${urlGetRecords}`;
+  const url = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi';
   const commaSeparatedIds = _.join(ids, ',');
   const response = await axios.get(url, {
     responseType: 'text',
@@ -105,38 +105,31 @@ async function getEFetch(ids){
       id: commaSeparatedIds,
     }
   });
-
-  //console.log(response.data);
   return xmlToJson.xml2js(response.data, {compact:true});
 }
 
 function extractMetadata(rawJson){
-
-  //return rawJson;
-  console.log(rawJson);
   return _.map(rawJson.PubmedArticleSet.PubmedArticle, (value,key)=> {
     return shareWorkSchema.parse(value);
   });
-  
-
 }
 
 async function go() {
-
-  const awardIds = ['GM067079','GM096767', 'CA158066'];
+  const awardIds = await getIds();
+  const uniqueAwardIds = _.uniq(awardIds);
+  console.log(`Found ${awardIds.length} awards; ${uniqueAwardIds.length} unique`);
 
   const mapper = async (awardId) => {
+    console.log(`Working on ${awardId}`);
     const response = await getAwardPublications(awardId);
-    fs.writeFile(`${process.cwd()}/${dataFolderPath}/awards/${awardId}.json`, JSON.stringify(response), (err) => {
-      if (err) throw err;
-      console.log('The file has been saved!');
-    });
-    console.log(response);
+    const filename = path.join(process.cwd(), dataFolderPath, 'awards', `${awardId}.json`);
+    if( response ) {
+      console.log(`Writing ${filename}`);
+      await pify(fs.writeFile)(filename, JSON.stringify(response));
+    }
   };
-
   //actually run the method above to getAwardPublications against each awardId in the awardsIds array, timeout enabled to avoid exceeded request limit to PMC
-  const result = await pMap(awardIds, mapper, {concurrency: 2});  
+  const result = await pMap(uniqueAwardIds, mapper, {concurrency: 2});  
 }
 
 go();
-

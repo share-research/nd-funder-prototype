@@ -77,6 +77,11 @@ parse-full-name@^1.2.3:
   resolved "https://registry.yarnpkg.com/parse-full-name/-/parse-full-name-1.2.3.tgz#5a298301b9a90a42eab61182815f3e13a39fabed"
   integrity sha1-WimDAbmpCkLqthGCgV8+E6Ofq+0=
 
+pify@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/pify/-/pify-4.0.1.tgz#4b2cd25c50d598735c50292224fd8c6df41e3231"
+  integrity sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==
+
 sax@^1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
