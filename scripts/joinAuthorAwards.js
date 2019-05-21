@@ -39,8 +39,11 @@ async function go() {
           grantId: grantId,
           nihGivenName: creator.givenName,
           nihFamilyName: creator.familyName,
+          fullName: `${creator.givenName} ${creator.familyName}`,
           nihAffiliation: creator.affiliation,
-          authorPosition: index+1,
+          authorPosition: index + 1,
+          isFirstAuthor: index === 0,
+          isLastAuthor: pub.creators.length === index,
         };
       });
     }));
