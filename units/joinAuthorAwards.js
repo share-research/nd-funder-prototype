@@ -33,13 +33,14 @@ async function go() {
     const grantId = filename.replace('.json', '');
     return _.flatten(_.map(jsonObj, (pub) => {
       const title = pub.title;
-      return _.map(pub.creators, (creator) => {
+      return _.map(pub.creators, (creator, index) => {
         return {
           pubTitle: title,
           grantId: grantId,
           nihGivenName: creator.givenName,
           nihFamilyName: creator.familyName,
           nihAffiliation: creator.affiliation,
+          authorPosition: index+1,
         };
       });
     }));

@@ -14,6 +14,7 @@ Look at clustering authors as shared co-authors
 Add total dollar amount size of the bubble
 # 6 - Run cluster analysis on terms from abstract (for authors with similar terms)
 ##- see if aligns with grants
+# 7a - Wrap up some code as NodeJS modules
 # 7 - center affiliation
 
 Analysis
