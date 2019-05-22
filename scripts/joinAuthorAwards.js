@@ -3,6 +3,7 @@ const pify = require('pify');
 const fs = require('fs');
 const path = require('path');
 const pMap = require('p-map');
+const moment = require('moment');
 
 const writeCsv = require('./writeCsv').command;
 const loadCsv = require('./loadCsv').command;
@@ -43,7 +44,7 @@ async function go() {
           nihAffiliation: creator.affiliation,
           authorPosition: index + 1,
           isFirstAuthor: index === 0,
-          isLastAuthor: pub.creators.length === index,
+          isLastAuthor: (pub.creators.length - 1) === index,
         };
       });
     }));
@@ -59,7 +60,7 @@ async function go() {
 
   const data = leftOuterJoin(authors, 'grantId', nih, 'grantId');
   await writeCsv({
-    path: './data/authorsByAwards.csv',
+    path: `./data/authorsByAwards${moment().parse('YYYYMMDDHHmmss')}.csv`,
     data,
   });
 }
