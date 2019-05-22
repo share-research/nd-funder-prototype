@@ -5,8 +5,9 @@ const path = require('path');
 const pMap = require('p-map');
 const moment = require('moment');
 
-const writeCsv = require('./writeCsv').command;
-const loadCsv = require('./loadCsv').command;
+const writeCsv = require('../units/writeCsv').command;
+const loadCsv = require('../units/loadCsv').command;
+const fuzzyMatchName = require('../units/fuzzyMatchName').command;
 
 async function go() {
   const awards = await loadCsv({
@@ -35,6 +36,9 @@ async function go() {
     return _.flatten(_.map(jsonObj, (pub) => {
       const title = pub.title;
       return _.map(pub.creators, (creator, index) => {
+        const isND = false;
+        const isInvestigator = false;
+        const isLeadInvestigator = false;
         return {
           pubTitle: title,
           grantId: grantId,
@@ -60,7 +64,7 @@ async function go() {
 
   const data = leftOuterJoin(authors, 'grantId', nih, 'grantId');
   await writeCsv({
-    path: `./data/authorsByAwards${moment().parse('YYYYMMDDHHmmss')}.csv`,
+    path: `./data/authorsByAwards.${moment().format('YYYYMMDDHHmmss')}.csv`,
     data,
   });
 }
