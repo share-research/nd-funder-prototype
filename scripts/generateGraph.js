@@ -112,8 +112,8 @@ async function go() {
     });
   });
 
-  await pify(fs.writeFile)('./viz/d3/data.json', JSON.stringify(d3));
-  await pify(fs.writeFile)('./viz/cyto/data.json', JSON.stringify(cyto));
+  await pify(fs.writeFile)('./data/d3.data.json', JSON.stringify(d3));
+  await pify(fs.writeFile)('./data/cyto.data.json', JSON.stringify(cyto));
 }
 
 go();

@@ -32,7 +32,7 @@
     <script src="cytoscape-euler.js"></script>
     <!-- <script src="cytoscape-cola.js"></script> -->
     <script>
-      fetch('data.json', {mode: 'no-cors'}).then(function(res) {
+      fetch('../../data/cyto.data.json', {mode: 'no-cors'}).then(function(res) {
         return res.json()
       }).then(function(data) {
         var cy = window.cy = cytoscape({

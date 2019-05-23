@@ -1,5 +1,9 @@
 # nd-funder-prototype
 
+First
+
+   cd thisreposdirectory
+
 To create a per-publication CSV file
 
     node scripts/joinAuthorAwards.js
@@ -10,9 +14,9 @@ If it segfaults,
 
 To generate graphs:
 
-    node scripts/generateGraph.js && ./node_modules/.bin/static viz/
+    node scripts/generateGraph.js && ./node_modules/.bin/static .
 
-And then browse to http://127.0.0.1:8080/cyto/. Working on a D3 version, but that's not working yet.
+And then browse to http://127.0.0.1:8080/viz/cyto/. Working on a D3 version, but that's not working yet.
 
 #TODO
 
