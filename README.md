@@ -1,11 +1,21 @@
 # nd-funder-prototype
 
+To create a per-publication CSV file
+
+    node scripts/joinAuthorAwards.js
+
+If it segfaults,
+
+    node --max-old-space-size=24000 scripts/joinAuthorAwards.js
+
+To generate graphs:
+
+    node scripts/generateGraph.js && ./node_modules/.bin/static viz/
+
+And then browse to http://127.0.0.1:8080/cyto/. Working on a D3 version, but that's not working yet.
+
 #TODO
 
-Need is first, is last, or other author number; and author ratio and proportion
-
-Add full name by concatenating columns together
-Look at clustering authors as shared co-authors
 # 3 - Create visualization to plot on graph clustering based on co-author on paper
      ## - size of bubble by # grant dollars
     ## - size of bubble by # collaborators
