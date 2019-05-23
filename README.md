@@ -2,7 +2,7 @@
 
 First
 
-   cd thisreposdirectory
+    cd thisreposdirectory
 
 To create a per-publication CSV file
 
