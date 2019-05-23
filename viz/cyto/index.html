@@ -1,0 +1,82 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <title>Graph</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+    <style>
+      body {
+        font-family: helvetica;
+        font-size: 14px;
+      }
+
+      #cy {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 999;
+      }
+
+      h1 {
+        opacity: 0.5;
+        font-size: 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="cy"></div>
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Promise,fetch"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.6.2/cytoscape.min.js"></script>
+    <script src="bilkent.js"></script>
+    <script src="cytoscape-euler.js"></script>
+    <!-- <script src="cytoscape-cola.js"></script> -->
+    <script>
+      fetch('data.json', {mode: 'no-cors'}).then(function(res) {
+        return res.json()
+      }).then(function(data) {
+        var cy = window.cy = cytoscape({
+          container: document.getElementById('cy'),
+          // layout: {
+          //   name: 'cose',
+          //   animate: false,
+          //   randomize: true,
+          // },
+          layout: {
+            // name: 'cola'
+						name: 'euler',
+						randomize: true,
+						animate: false
+					},
+          style: [
+            {
+              selector: 'node',
+              style: {
+                'background-color': function( ele ){ 
+                  if (ele.data('type') === 'person')
+                    return '#D11149';
+                  else if (ele.data('type') === 'grant')
+                    return '#2DE100';
+                  else if (ele.data('type') === 'publication')
+                    return '#1A8FE3';
+                },
+              }
+            },
+            {
+              selector: 'edge',
+              style: {
+                'curve-style': 'haystack',
+                'width': 3,
+                'line-color': '#ad1a66'
+              }
+            },
+          ],
+          elements: data,
+          pixelRatio: 1,
+          hideEdgesOnViewport: true,
+          textureOnViewport: true,
+        });
+      });
+    </script>
+  </body>
+</html>
