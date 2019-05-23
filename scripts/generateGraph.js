@@ -77,7 +77,6 @@ async function go() {
       data: {
         id: md5(pub),
         type: 'publication',
-        label: pub,
       },
     });
   });

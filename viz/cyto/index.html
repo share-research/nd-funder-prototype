@@ -46,9 +46,18 @@
             // name: 'cola'
 						name: 'euler',
 						randomize: true,
-						animate: false
+            animate: false,
+            springLength: 80*4,
+            maxIterations: 1000*4,
+            maxSimulationTime: 4000*4,
 					},
           style: [
+            {
+              "selector": "node[label]",
+              "style": {
+                "label": "data(label)"
+              }
+            },
             {
               selector: 'node',
               style: {

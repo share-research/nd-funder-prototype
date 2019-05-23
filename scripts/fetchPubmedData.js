@@ -8,9 +8,9 @@ const schema = require('schm');
 const translate = require('schm-translate');
 const xmlToJson = require('xml-js');
 
-const getIds = require('./units/joinCsvs').command;
+const getIds = require('../units/joinCsvs').command;
 
-const dataFolderPath = "data";
+const dataFolderPath = "/data";
 
 //const getText = constraints => prevSchema => prevSchema.merge({
 //  validate(values) {
