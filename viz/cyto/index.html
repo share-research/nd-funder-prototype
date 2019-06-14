@@ -63,7 +63,10 @@
               style: {
                 'background-color': function( ele ){ 
                   if (ele.data('type') === 'person')
-                    return '#D11149';
+                    if(ele.data('isHarper') !== "true") // it came in as a string
+                      return '#D11149';
+                    else
+                      return '#FFD700';
                   else if (ele.data('type') === 'grant')
                     return '#2DE100';
                   else if (ele.data('type') === 'publication')

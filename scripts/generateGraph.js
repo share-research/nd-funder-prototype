@@ -9,73 +9,58 @@ function md5(s) {
 
 const loadCsv = require('../units/loadCsv').command;
 
+function pickFieldsFromUniqueRows(rows, fields, uniqueValue) {
+  return _.uniqWith(
+    _.map(rows, row => _.pick(row, fields))
+  , uniqueValue);
+}
+
 async function go() {
   const data = await loadCsv({
     path: './data/authorsByAwards.20190523000131.csv',
   });
 
-  const people = _.uniq(_.map(data, (row) => row.fullName));
-  const grants = _.uniq(_.map(data, (row) => row.grantId));
-  const pubs = _.uniq(_.map(data, (row) => row.pubTitle));
+  // Second argument can be one of the following, unless we edit joinAuthorAward.js:
+  //
+  // pubTitle,grantId,nihGivenName,nihFamilyName,first,last,fullName,
+  // nihAffiliation,authorPosition,isFirstAuthor,isLastAuthor,isHarper,
+  // isInvestigator,isLeadInvestigator,Date Awarded - Fiscal Year (Nbr),
+  // Date Awarded,Award Lead Research Division,Award Lead Research Dept,
+  // Award Lead Investigator Name,Award Investigator Full Name,
+  // Award Research Department,Award Investigator Role,Award Title,
+  // Notre Dame Sponsor Name,Sponsor Award Number/ Award ID,Prime Sponsor,
+  // Award Total Amount,Award Start Date,Award End Date,Cayuse Award Number
+  const people = pickFieldsFromUniqueRows(data, ['fullName', 'isHarper'], 'fullName');
+  const grants = pickFieldsFromUniqueRows(data, ['grantId'], 'grantId');
+  const pubs = pickFieldsFromUniqueRows(data, ['pubTitle'], 'pubTitle');
 
   const cyto = [];
-  const d3 = {
-    nodes: [],
-    links: [],
-  };
-
-  // elements.push({
-  //   data: {id: 1},
-  // });
-
-  // elements.push({
-  //   data: {id: 2},
-  // });
-
-  // elements.push({
-  //   data: {
-  //     id: '1-2',
-  //     source: 1,
-  //     target: 2,
-  //   },
-  // });
 
   _.forEach(people, (person) => {
-    d3.nodes.push({
-      id: md5(person),
-    });
-
     cyto.push({
       data: {
-        id: md5(person),
+        id: md5(person.fullName),
         type: 'person',
-        label: person,
+        label: person.fullName,
+        isHarper: person.isHarper,
       },
     });
   });
 
   _.forEach(grants, (grant) => {
-    d3.nodes.push({
-      id: md5(grant),
-    });
-
     cyto.push({
       data: {
-        id: md5(grant),
+        id: md5(grant.grantId),
         type: 'grant',
-        label: grant,
+        label: grant.grantId,
       },
     });
   });
 
   _.forEach(pubs, (pub) => {
-    d3.nodes.push({
-      id: md5(pub),
-    });
-
     cyto.push({
       data: {
-        id: md5(pub),
+        id: md5(pub.pubTitle),
         type: 'publication',
       },
     });
@@ -85,15 +70,6 @@ async function go() {
     const pubTitle = md5(author.pubTitle);
     const fullName = md5(author.fullName);
     const grantId =  md5(author.grantId);
-
-    d3.links.push({
-      source: pubTitle,
-      target: fullName,
-    });
-    d3.links.push({
-      source: grantId,
-      target: pubTitle,
-    });
 
     cyto.push({
       data: { 
@@ -111,7 +87,6 @@ async function go() {
     });
   });
 
-  await pify(fs.writeFile)('./data/d3.data.json', JSON.stringify(d3));
   await pify(fs.writeFile)('./data/cyto.data.json', JSON.stringify(cyto));
 }
 

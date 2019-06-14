@@ -57,4 +57,10 @@ write.csv(
   "/Users/jspie/Code/Github/share-research/nd-funder-prototype/data/processed-author-totals.csv"
 )
 
+head(processed[order(processed$total, decreasing=T),], n=10)
+summary(lm(total ~ firstOrLastAuthorCounts, data=processed))
+with(processed, plot(total, firstOrLastAuthorCounts))
+
 summary(lm(total ~ pubs + grants + everWasInvestigator + everWasFirstOrLastAuthor + firstOrLastAuthorCounts, data=processed))
+
+ddply(dat, c('grantId', 'title'), summarize, inv=sum(isInvestigator)+sum(isLeadInvestigator))
