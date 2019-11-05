@@ -5,11 +5,11 @@
   "license": "MIT",
   "dependencies": {
     "another-name-parser": "^0.0.7",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "elasticlunr": "^0.9.5",
     "fuse.js": "^3.4.4",
     "humanparser": "^1.10.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.13",
     "moment": "^2.24.0",
     "node-static": "^0.7.11",
     "p-all": "^2.1.0",
@@ -17,8 +17,15 @@
     "papaparse": "^4.6.3",
     "parse-full-name": "^1.2.3",
     "pify": "^4.0.1",
+    "plyr": "^3.5.4",
     "schm": "^0.4.1",
     "schm-translate": "^0.4.1",
     "xml-js": "^1.6.11"
+  },
+  "devDependencies": {
+    "jest": "^24.8.0"
+  },
+  "scripts": {
+    "test": "jest"
   }
 }
