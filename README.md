@@ -14,9 +14,9 @@ If it segfaults,
 
 To generate graphs:
 
-    node scripts/generateGraph.js && ./node_modules/.bin/static .
+    node scripts/generateGraph.js && npm start
 
-And then browse to http://127.0.0.1:8080/viz/cyto/. Working on a D3 version, but that's not working yet.
+And then browse to http://127.0.0.1:1842/viz/cyto/. It will take a minute to load. Working on a D3 version, but that's not working yet.
 
 #TODO
 * 3 - Create visualization to plot on graph clustering based on co-author on paper

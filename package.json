@@ -11,7 +11,6 @@
     "humanparser": "^1.10.0",
     "lodash": "^4.17.13",
     "moment": "^2.24.0",
-    "node-static": "^0.7.11",
     "p-all": "^2.1.0",
     "p-map": "^2.1.0",
     "papaparse": "^4.6.3",
@@ -20,12 +19,14 @@
     "plyr": "^3.5.4",
     "schm": "^0.4.1",
     "schm-translate": "^0.4.1",
+    "swank": "^1.3.1",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
     "jest": "^24.8.0"
   },
   "scripts": {
+    "start": "echo 'http://localhost:1842/viz/cyto/' && swank --path ./ --port 1842 --watch",
     "test": "jest"
   }
 }
