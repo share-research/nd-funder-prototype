@@ -5,7 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "another-name-parser": "^0.0.7",
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "elasticlunr": "^0.9.5",
     "fuse.js": "^3.4.4",
     "humanparser": "^1.10.0",
