@@ -10,7 +10,7 @@
     "fuse.js": "^3.4.4",
     "humanparser": "^1.10.0",
     "lodash": "^4.17.13",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "p-all": "^2.1.0",
     "p-map": "^2.1.0",
     "papaparse": "^4.6.3",
